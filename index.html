@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Glorious IXP2 Work</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --black: #111;
+      --white: #fafaf8;
+      --line: rgba(0,0,0,0.12);
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--white);
+      color: var(--black);
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='0.8' fill='%23000' fill-opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 60px 32px 80px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 72px;
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.6rem, 6vw, 4.4rem);
+      font-weight: 400;
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: rgba(0,0,0,0.38);
+    }
+
+    .header-line {
+      width: 1px;
+      height: 48px;
+      background: var(--line);
+      margin: 28px auto 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .card:nth-child(2) { margin-top: 20px; }
+    .card:nth-child(4) { margin-top: -12px; }
+
+    .card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      cursor: pointer;
+      background: #fff;
+      transition: border-color 0.3s ease, transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    .card:hover {
+      border-color: rgba(0,0,0,0.25);
+      transform: translateY(-4px);
+    }
+
+    .card:nth-child(3):hover { transform: translateY(-4px) rotate(0.6deg); }
+    .card:nth-child(5):hover { transform: translateY(-6px) rotate(-0.4deg); }
+
+    .card-img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      transition: transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.45s ease;
+      filter: grayscale(8%);
+    }
+
+    .card:hover .card-img {
+      transform: scale(1.05);
+      filter: grayscale(0%) brightness(0.7);
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 20px 16px 18px;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      pointer-events: none;
+    }
+
+    .card:hover .overlay {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .overlay-tag {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 6px;
+    }
+
+    .overlay-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.15rem;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .overlay-arrow {
+      margin-top: 12px;
+      width: 24px;
+      height: 1px;
+      background: rgba(255,255,255,0.5);
+      position: relative;
+      transition: width 0.3s ease 0.05s;
+    }
+
+    .card:hover .overlay-arrow {
+      width: 36px;
+    }
+
+    .overlay-arrow::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: -3px;
+      width: 6px;
+      height: 6px;
+      border-right: 1px solid rgba(255,255,255,0.5);
+      border-top: 1px solid rgba(255,255,255,0.5);
+      transform: rotate(45deg);
+    }
+
+    .card-num {
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0);
+      transition: color 0.3s ease;
+      z-index: 2;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .card:hover .card-num {
+      color: rgba(255,255,255,0.4);
+    }
+
+    footer {
+      margin-top: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .footer-line {
+      flex: 1;
+      max-width: 160px;
+      height: 1px;
+      background: var(--line);
+    }
+
+    .footer-text {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(0,0,0,0.25);
+      font-weight: 400;
+    }
+
+    @media (max-width: 700px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .card:nth-child(2),
+      .card:nth-child(4) {
+        margin-top: 0;
+      }
+
+      .card:nth-child(5) {
+        grid-column: 1 / -1;
+        max-width: 50%;
+        margin: 0 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <header>
+      <h1>Glorious<br><em>IXP2 Work</em></h1>
+      <div class="header-line"></div>
+    </header>
+
+    <main class="grid">
+
+      <!-- Card 1 -->
+      <a class="card" href="http://project1.ixp2.gaoqianhuitoday.com/" target="_blank" rel="noopener">
+        <span class="card-num">01</span>
+        <img class="card-img" src="project1.jpg" alt="Project 1" loading="lazy" />
+        <div class="overlay">
+          <span class="overlay-tag">Project</span>
+          <span class="overlay-title">Project 1</span>
+          <div class="overlay-arrow"></div>
+        </div>
+      </a>
+
+      <!-- Card 2 -->
+      <a class="card" href="https://project2.ixp2.gaoqianhuitoday.com/" target="_blank" rel="noopener">
+        <span class="card-num">02</span>
+        <img class="card-img" src="project2.jpg" alt="Project 2" loading="lazy" />
+        <div class="overlay">
+          <span class="overlay-tag">Project</span>
+          <span class="overlay-title">Project 2</span>
+          <div class="overlay-arrow"></div>
+        </div>
+      </a>
+
+      <!-- Card 3 -->
+      <a class="card" href="https://project3.ixp2.gaoqianhuitoday.com/index.html" target="_blank" rel="noopener">
+        <span class="card-num">03</span>
+        <img class="card-img" src="project3.jpg" alt="Project 3" loading="lazy" />
+        <div class="overlay">
+          <span class="overlay-tag">Project</span>
+          <span class="overlay-title">Project 3</span>
+          <div class="overlay-arrow"></div>
+        </div>
+      </a>
+
+      <!-- Card 4 -->
+      <a class="card" href="http://project4.ixp2.gaoqianhuitoday.com/index.html" target="_blank" rel="noopener">
+        <span class="card-num">04</span>
+        <img class="card-img" src="project4.jpg" alt="Project 4" loading="lazy" />
+        <div class="overlay">
+          <span class="overlay-tag">Project</span>
+          <span class="overlay-title">Project 4</span>
+          <div class="overlay-arrow"></div>
+        </div>
+      </a>
+
+      <!-- Card 5 -->
+      <a class="card" href="http://project5.ixp2.gaoqianhuitoday.com" target="_blank" rel="noopener">
+        <span class="card-num">05</span>
+        <img class="card-img" src="project5.jpg" alt="Project 5" loading="lazy" />
+        <div class="overlay">
+          <span class="overlay-tag">Project</span>
+          <span class="overlay-title">Project 5</span>
+          <div class="overlay-arrow"></div>
+        </div>
+      </a>
+
+    </main>
+
+    <footer>
+      <div class="footer-line"></div>
+      <span class="footer-text">IXP2 — Selected Works</span>
+      <div class="footer-line"></div>
+    </footer>
+
+  </div>
+</body>
+</html>
